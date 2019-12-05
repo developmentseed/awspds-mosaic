@@ -1,0 +1,1 @@
+"""awspds_mosaic scripts."""

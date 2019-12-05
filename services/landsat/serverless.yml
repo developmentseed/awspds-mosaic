@@ -1,0 +1,96 @@
+service: awspds-mosaic-landsat
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: ${opt:stage, 'production'}
+  region: us-west-2
+  deploymentBucket: ${opt:bucket}
+
+  stackTags:
+    Project: labs
+
+  iamRoleStatements:
+  -  Effect: "Allow"
+     Action:
+       - "*"
+     Resource:
+       - arn:aws:s3:::${opt:bucket}*
+
+  -  Effect: "Allow"
+     Action:
+       - "s3:*"
+     Resource:
+       - "arn:aws:s3:::landsat-pds*"
+
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+    minimumCompressionSize: 1
+
+package:
+  artifact: ../../package.zip
+
+functions:
+  web:
+    handler: awspds_mosaic.landsat.handlers.web.app
+    memorySize: 128
+    timeout: 3
+    layers:
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+    environment:
+      GDAL_DATA: /opt/share/gdal
+      PROJ_LIB: /opt/share/proj
+      MAPBOX_ACCESS_TOKEN: ${opt:token, ""}
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: get
+          cors: true
+
+  tiler:
+    handler: awspds_mosaic.landsat.handlers.tiles.app
+    memorySize: 3008
+    timeout: 20
+    layers:
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+    environment:
+      CPL_TMPDIR: /tmp
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: .tif,.TIF,.ovr
+      GDAL_CACHEMAX: 512
+      GDAL_DATA: /opt/share/gdal
+      GDAL_DISABLE_READDIR_ON_OPEN: FALSE
+      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES: YES
+      GDAL_HTTP_MULTIPLEX: YES
+      GDAL_HTTP_VERSION: 2
+      MAX_THREADS: 50
+      MOSAIC_DEF_BUCKET: ${opt:bucket}
+      PROJ_LIB: /opt/share/proj
+      PYTHONWARNINGS: ignore
+      VSI_CACHE: TRUE
+      VSI_CACHE_SIZE: 536870912
+    events:
+      - http:
+          path: /tiles/{proxy+}
+          method: any
+          cors: true
+
+  mosaics:
+    handler: awspds_mosaic.landsat.handlers.mosaic.app
+    memorySize: 3008
+    timeout: 30
+    layers:
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+    environment:
+      GDAL_DATA: /opt/share/gdal
+      MOSAIC_DEF_BUCKET: ${opt:bucket}
+      PROJ_LIB: /opt/share/proj
+    events:
+      - http:
+          path: /mosaic/{proxy+}
+          method: any
+          cors: true

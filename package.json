@@ -1,0 +1,24 @@
+{
+  "name": "awspds_mosaic",
+  "version": "1.0.0",
+  "description": "A lightweight and custom mosaic server.",
+  "devDependencies": {
+    "serverless": "^1.23.0"
+  },
+  "author": "",
+  "main": "index.js",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developmentseed/awspds-mosaic.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/developmentseed/awspds-mosaic/issues"
+  },
+  "homepage": "https://github.com/developmentseed/awspds-mosaic#readme"
+}
