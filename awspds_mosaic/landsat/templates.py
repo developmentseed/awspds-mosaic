@@ -112,7 +112,7 @@ def landsatlive(endpoint: str, token: str = "") -> str:
           </div>
           <div id='zoom' class="zoom-info"><span></span></div>
         </div>
-        <div id='menu'>
+        <div id='menu' class="wmax300">
           <section id='rgb' class="px12 py12 active">
             <div class='txt-m mt6 mb6 color-black'>Band combination</div>
             <div class='select-container wmax-full'>
@@ -190,6 +190,21 @@ def landsatlive(endpoint: str, token: str = "") -> str:
               <input id='cloud-cover' type='range' min='0' max='100' step='1' value='75'/>
             </div>
           </section>
+
+
+          <section id='info' class="px12 py12 active">
+            <div class='txt-m mt6 mb6 color-black'>FAQ</div>
+            <p><b>Why is this slow?</b>
+            Landsat 8 hosted on AWS using external overview which required more GET requests than proper COG.
+            Also the geometry stored in STAC metadata is the bbox of each scene, resulting on non-optimized mosaic-json.
+            </p>
+            <p><b>What are the black/white borders?</b>
+            Landsat 8 hosted on AWS doesn't use internal nodata and then it resulted in artefacts when creating the overviews.
+            </p>
+
+            <p>Link: <a href="https://github.com/developmentseed/awspds-mosaic" target="_blank">awspds-mosaic</a> Github repo.</p>
+          </section>
+
         </div>
         <script>
         const start = moment().subtract(62, 'days').format('YYYY-MM-DD')
