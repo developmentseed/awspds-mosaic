@@ -37,7 +37,7 @@ functions:
     memorySize: 128
     timeout: 3
     layers:
-      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:5
     environment:
       GDAL_DATA: /opt/share/gdal
       PROJ_LIB: /opt/share/proj
@@ -57,7 +57,7 @@ functions:
     memorySize: 3008
     timeout: 20
     layers:
-      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:5
     environment:
       CPL_TMPDIR: /tmp
       CPL_VSIL_CURL_ALLOWED_EXTENSIONS: .tif,.TIF,.ovr
@@ -67,7 +67,7 @@ functions:
       GDAL_HTTP_MERGE_CONSECUTIVE_RANGES: YES
       GDAL_HTTP_MULTIPLEX: YES
       GDAL_HTTP_VERSION: 2
-      MAX_THREADS: 50
+      MAX_THREADS: 10
       MOSAIC_DEF_BUCKET: ${opt:bucket}
       PROJ_LIB: /opt/share/proj
       PYTHONWARNINGS: ignore
@@ -84,7 +84,7 @@ functions:
     memorySize: 3008
     timeout: 30
     layers:
-      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:3
+      - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:5
     environment:
       GDAL_DATA: /opt/share/gdal
       MOSAIC_DEF_BUCKET: ${opt:bucket}

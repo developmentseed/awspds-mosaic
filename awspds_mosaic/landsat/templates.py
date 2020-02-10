@@ -50,8 +50,9 @@ def landsatlive(endpoint: str, token: str = "") -> str:
                 padding: 5px;
                 width: auto;
                 height: auto;
-                font-size: 12px;
+                font-size: 14px;
                 color: #000;
+                background-color: #FFF;
             }}
             .loading-map {{
               position: absolute;
@@ -194,6 +195,10 @@ def landsatlive(endpoint: str, token: str = "") -> str:
 
           <section id='info' class="px12 py12 active">
             <div class='txt-m mt6 mb6 color-black'>FAQ</div>
+
+            <p><b>Zoom</b>
+            Tiles are created dynamically starting at <strong>zoom 7</strong>.</p>
+
             <p><b>Why is this slow?</b>
             Landsat 8 hosted on AWS using external overview which required more GET requests than proper COG.
             Also the geometry stored in STAC metadata is the bbox of each scene, resulting on non-optimized mosaic-json.
@@ -232,7 +237,7 @@ def landsatlive(endpoint: str, token: str = "") -> str:
           style: style,
           center: [ -80.123086, 25.992706 ],
           attributionControl: true,
-          minZoom: 8,
+          minZoom: 1,
           maxZoom: 12,
           zoom: 8,
           hash: true
@@ -259,7 +264,7 @@ def landsatlive(endpoint: str, token: str = "") -> str:
           const url = new URL(`{endpoint}/tiles/${{scope.mosaicid}}/tilejson.json`)
           Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
 
-          map.addSource('raster', {{ type: 'raster', url: url.href }})
+          map.addSource('raster', {{ type: 'raster', url: url.href, tileSize: 256}})
           map.addLayer({{ id: 'raster', type: 'raster', source: 'raster' }})
 
           document.getElementById('loader').classList.toggle('off')
@@ -341,6 +346,8 @@ def landsatlive(endpoint: str, token: str = "") -> str:
 
         // LOAD
         map.on('load', () => {{
+          if (map.getZoom() < 7) throw new Error('please zoom')
+
           document.getElementById('loader').classList.toggle('off')
           const latLngBounds = map.getBounds()
           const viewportBbox = [
