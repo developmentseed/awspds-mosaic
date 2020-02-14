@@ -4,7 +4,7 @@ Create Cloud Optimized GeoTIFF [mosaics](https://github.com/developmentseed/mosa
 
 ![landsatlive](https://user-images.githubusercontent.com/10407788/53614981-299ec800-3bb2-11e9-959e-367c973299f8.png)
 
-The repo host all the code for [landsatlive.live](https://landsatlive.live) website and APIs.
+The repo host all the code for [landsatlive.live](https://landsatlive.live) website and APIs. Most of the code is a custom fork of [developmentseed/cogeo-mosaic-tiler](https://github.com/developmentseed/cogeo-mosaic-tiler).
 
 
 ## Deploy your own
