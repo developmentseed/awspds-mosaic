@@ -94,3 +94,30 @@ functions:
           path: /mosaic/{proxy+}
           method: any
           cors: true
+
+  batch:
+      handler: awspds_mosaic.landsat.handlers.tiles.app
+      memorySize: 3008
+      timeout: 30
+      layers:
+        - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-cogeo:5
+      environment:
+        CPL_TMPDIR: /tmp
+        CPL_VSIL_CURL_ALLOWED_EXTENSIONS: .tif,.TIF,.ovr
+        GDAL_CACHEMAX: 512
+        GDAL_DATA: /opt/share/gdal
+        GDAL_DISABLE_READDIR_ON_OPEN: FALSE
+        GDAL_HTTP_MERGE_CONSECUTIVE_RANGES: YES
+        GDAL_HTTP_MULTIPLEX: YES
+        GDAL_HTTP_VERSION: 2
+        MAX_THREADS: 20
+        MOSAIC_DEF_BUCKET: ${opt:bucket}
+        PROJ_LIB: /opt/share/proj
+        PYTHONWARNINGS: ignore
+        VSI_CACHE: TRUE
+        VSI_CACHE_SIZE: 536870912
+      events:
+        - http:
+            path: /batch/{proxy+}
+            method: any
+            cors: true
